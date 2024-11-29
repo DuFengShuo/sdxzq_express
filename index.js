@@ -70,14 +70,14 @@ app.post("/api/userLogin", async (req, res) => {
 
       console.log("结果", body);
 
-      var oCode = body;
+      // var oCode = JSON.parse(body);
       // console.log("结果json openid:", oCode.op);
-
-      let myMd5OpenId = "";
+      var oCode = JSON.parse(body);
+      console.log("结果json :", oCode.openid);
 
       if (!oCode.errcode) {
         console.log("到判断里了");
-        
+
         const userData = await User.findOne({ where: { openId: oCode.openid } });
         if (userData == null) {
           console.log('Not found!');
