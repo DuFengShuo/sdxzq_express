@@ -126,6 +126,45 @@ app.post("/api/userLogin", async (req, res) => {
 
 });
 
+//计数
+app.post("/api/setUserCount", async (req, res) => {
+  const userOpenId = req.query.openId; //获取到用户的token 根据token查询用户信息
+  console.log("拿到的openId", userOpenId);
+  const userData = await User.findOne({ where: { openId: userOpenId } }); //查询用户
+  if (userData.user_type == 0) { //普通用户
+    let count = userData.useCount + 1;
+    //更新用户次数
+    const result = await User.update(
+      { useCount: count }, // 要更新的字段和值
+      {
+        where: {
+          openId: userOpenId
+        }
+      }
+    );
+    if (result) {
+      res.send({
+        code: 200,
+        data: "次数更新成功",
+      });
+    } else {
+      res.send({
+        code: 500,
+        data: "次数更新失败",
+      });
+    }
+  } else {
+    res.send({
+      code: 500,
+      data: "会员不用计数",
+    });
+  }
+
+});
+
+
+
+
 // 获取用户类型，普通用户解析数加一
 app.post("/api/getUserTypeCount", async (req, res) => {
   const userOpenId = req.query.openId; //获取到用户的token 根据token查询用户信息
@@ -148,24 +187,12 @@ app.post("/api/getUserTypeCount", async (req, res) => {
           data: "体验解析结束,请联系客服增加次数",
         });
       } else {
-
-        let count = userData.useCount + 1;
-
-        //更新用户次数
-        const result = await User.update(
-          { useCount: count }, // 要更新的字段和值
-          {
-            where: {
-              openId: userOpenId
-            }
-          }
-        );
-
         res.send({
           code: 200,
-          data: "剩余解析次数" + (3 - count),
+          data: "已解析次数" + userData.useCount,
         });
       }
+
     } else {
       //判断当前是否大于会员的日期
       const dqDate = userData.endDate; //到期时间格式 "2024-11-28 20:41:00";
