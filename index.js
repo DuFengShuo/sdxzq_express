@@ -70,35 +70,42 @@ app.post("/api/userLogin", async (req, res) => {
 
       console.log("结果", body);
 
-      var oCode = JSON.parse(body);
-      console.log("结果json openid:", oCode);
+      var oCode = body;
+      // console.log("结果json openid:", oCode.op);
 
       let myMd5OpenId = "";
 
       if (!oCode.errcode) {
-
+        console.log("到判断里了");
+        
         const userData = await User.findOne({ where: { openId: oCode.openid } });
-        if (userData === null) {
+        if (userData == null) {
           console.log('Not found!');
           //创建一个用户
           const newUser = await User.create({ openId: oCode.openid });
           console.log(newUser instanceof User); // true
           console.log(newUser.openId); // "Jane"
+          res.send({
+            code: 200,
+            data: "登录成功",
+            myToken: newUser.openId,
+          });
 
         } else {
 
           console.log('已有用户');
           console.log(userData instanceof User); // true
           console.log(userData.openId); // 'My Title'
+
+          res.send({
+            code: 200,
+            data: "登录成功",
+            myToken: userData.openId,
+          });
         }
 
-        const md5Hash = md5(oCode.openid);
 
-        res.send({
-          code: 200,
-          data: "登录成功",
-          token: oCode.openId,
-        });
+
 
 
       } else {
@@ -254,21 +261,21 @@ app.post("/api/searchUser", async (req, res) => {
     });
   } else {
 
-    let userId  = req.query.userId;
+    let userId = req.query.userId;
     let myuserId = userId - 9852374326; // 真实id
     const aUser = await User.findOne({ where: { Id: myuserId } });
-    if(aUser){
+    if (aUser) {
       res.send({
         code: 200,
-        data: {"userId":aUser.id,"userType":aUser.user_type,"endDate":aUser.endDate},
+        data: { "userId": aUser.id, "userType": aUser.user_type, "endDate": aUser.endDate },
       });
-    }else{
+    } else {
       res.send({
         code: 500,
         data: "无此用户",
       });
     }
-   
+
   }
 
 });
@@ -288,18 +295,18 @@ app.post("/api/getUserList", async (req, res) => {
   } else {
 
     const aUser = await User.findAll();
-    if(aUser){
+    if (aUser) {
       res.send({
         code: 200,
         data: aUser,
       });
-    }else{
+    } else {
       res.send({
         code: 500,
         data: "无用户",
       });
     }
-   
+
   }
 
 
@@ -326,7 +333,7 @@ app.post("/api/updateUserType", async (req, res) => {
     let updateUserType = req.query.type;
     let endDate = req.query.endDate;//到期时间
     let startDate = req.query.startDate; //开始时间
- 
+
     let myuserId = updateUserId - 9852374326; // 真实id
 
     if (updateUserId && updateUserType && endDate) {
