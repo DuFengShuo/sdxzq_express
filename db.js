@@ -5,7 +5,7 @@ const { MYSQL_USERNAME, MYSQL_PASSWORD, MYSQL_ADDRESS = "" } = process.env;
 
 const [host, port] = MYSQL_ADDRESS.split("localhost:3306");
 
-const sequelize = new Sequelize("sdxzq", "root", "dushuo123", {
+const sequelize = new Sequelize("sdxzq", "root", "Dushuo123", {
   host,
   port,
   dialect: "mysql" /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */,
