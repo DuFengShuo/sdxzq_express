@@ -104,10 +104,6 @@ app.post("/api/userLogin", async (req, res) => {
           });
         }
 
-
-
-
-
       } else {
         res.send({
           code: 500,
@@ -181,7 +177,7 @@ app.post("/api/getUserTypeCount", async (req, res) => {
       console.log("用户次数", userData.useCount);
 
       // 次数到3次 拒绝解析，返回失败
-      if (userData.useCount == 3) {
+      if (userData.useCount >= 3) {
         res.send({
           code: 500,
           data: "体验解析结束,请联系客服增加次数",
@@ -236,7 +232,7 @@ app.post("/api/getUserInfo", async (req, res) => {
     // console.log(randomNumber);
     res.send({
       code: 200,
-      data: { "userId": 9852374326 + userData.id, "userType": userData.user_type, "userCount": userData.useCount },
+      data: { "userId": 9852374326 + userData.id, "userType": userData.user_type, "userCount": userData.useCount,"endDate":userData.endDate },
     });
   }
 });
