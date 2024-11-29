@@ -1,15 +1,31 @@
 const { Sequelize, DataTypes } = require("sequelize");
 
+// // 从环境变量中读取数据库配置
+// const { MYSQL_USERNAME, MYSQL_PASSWORD, MYSQL_ADDRESS = "" } = process.env;
+
+// const [host, port] = MYSQL_ADDRESS.split("localhost:3306");
+
+// const sequelize = new Sequelize("sdxzq", "root", "dushuo123", {
+//   host,
+//   port,
+//   dialect: "mysql" /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */,
+// });
+
+
+
 // 从环境变量中读取数据库配置
 const { MYSQL_USERNAME, MYSQL_PASSWORD, MYSQL_ADDRESS = "" } = process.env;
 
-const [host, port] = MYSQL_ADDRESS.split("localhost:3306");
+const [host, port] = MYSQL_ADDRESS.split(":");
 
-const sequelize = new Sequelize("sdxzq", "root", "Dushuo123", {
+const sequelize = new Sequelize("sdxzq", MYSQL_USERNAME, MYSQL_PASSWORD, {
   host,
   port,
   dialect: "mysql" /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */,
 });
+
+
+
 
 // 定义数据模型
 const Counter = sequelize.define("Counter", {
