@@ -70,8 +70,6 @@ app.post("/api/userLogin", async (req, res) => {
 
       console.log("结果", body);
 
-      // var oCode = JSON.parse(body);
-      // console.log("结果json openid:", oCode.op);
       var oCode = JSON.parse(body);
       console.log("结果json :", oCode.openid);
 
@@ -111,7 +109,17 @@ app.post("/api/userLogin", async (req, res) => {
         });
       }
 
+    }) .catch(error => {
+      console.error('获取openId错误:', error);
+      res.send({
+        code: 500,
+        data: "登录失败",
+
+      });
+    
     });
+    
+    ;
 
   } else {
     res.send({
@@ -232,7 +240,7 @@ app.post("/api/getUserInfo", async (req, res) => {
     // console.log(randomNumber);
     res.send({
       code: 200,
-      data: { "userId": 9852374326 + userData.id, "userType": userData.user_type, "userCount": userData.useCount,"endDate":userData.endDate },
+      data: { "userId": 9852374326 + userData.id, "userType": userData.user_type, "userCount": userData.useCount, "endDate": userData.endDate },
     });
   }
 });
