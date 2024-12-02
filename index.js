@@ -64,62 +64,62 @@ app.post("/api/userLogin", async (req, res) => {
   if (userCode) {
 
     let url = 'https://api.weixin.qq.com/sns/jscode2session?appid=wx26dd37776ee9f17f&secret=b00201d207b57c4885fbb137301a50e5&js_code=' + userCode + '&grant_type=authorization_code';
-    request(url, async (error, response, body) => {
+    try {
 
-      console.log('statusCode:', response && response.statusCode);
+      request(url, async (error, response, body) => {
 
-      console.log("结果", body);
+        console.log('statusCode:', response && response.statusCode);
 
-      var oCode = JSON.parse(body);
-      console.log("结果json :", oCode.openid);
+        console.log("结果", body);
 
-      if (!oCode.errcode) {
-        console.log("到判断里了");
+        var oCode = JSON.parse(body);
+        console.log("结果json :", oCode.openid);
 
-        const userData = await User.findOne({ where: { openId: oCode.openid } });
-        if (userData == null) {
-          console.log('Not found!');
-          //创建一个用户
-          const newUser = await User.create({ openId: oCode.openid });
-          console.log(newUser instanceof User); // true
-          console.log(newUser.openId); // "Jane"
-          res.send({
-            code: 200,
-            data: "登录成功",
-            myToken: newUser.openId,
-          });
+        if (!oCode.errcode) {
+          console.log("到判断里了");
+
+          const userData = await User.findOne({ where: { openId: oCode.openid } });
+          if (userData == null) {
+            console.log('Not found!');
+            //创建一个用户
+            const newUser = await User.create({ openId: oCode.openid });
+            console.log(newUser instanceof User); // true
+            console.log(newUser.openId); // "Jane"
+            res.send({
+              code: 200,
+              data: "登录成功",
+              myToken: newUser.openId,
+            });
+
+          } else {
+
+            console.log('已有用户');
+            console.log(userData instanceof User); // true
+            console.log(userData.openId); // 'My Title'
+
+            res.send({
+              code: 200,
+              data: "登录成功",
+              myToken: userData.openId,
+            });
+          }
 
         } else {
-
-          console.log('已有用户');
-          console.log(userData instanceof User); // true
-          console.log(userData.openId); // 'My Title'
-
           res.send({
-            code: 200,
-            data: "登录成功",
-            myToken: userData.openId,
+            code: 500,
+            data: "登录失败",
           });
         }
 
-      } else {
-        res.send({
-          code: 500,
-          data: "登录失败",
-        });
-      }
+      });
 
-    }) .catch(error => {
-      console.error('获取openId错误:', error);
+    } catch (error) {
+      console.log("登录请求失败", error);
       res.send({
         code: 500,
         data: "登录失败",
-
       });
-    
-    });
-    
-    ;
+    }
 
   } else {
     res.send({
