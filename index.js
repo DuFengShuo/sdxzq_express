@@ -292,7 +292,7 @@ app.post("/api/searchUser", async (req, res) => {
 
     let userId = req.query.userId;
     let myuserId = userId - 9852374326; // 真实id
-    const aUser = await User.findAll({ where: { Id: myuserId } });
+    const aUser = await User.findOne({ where: { Id: myuserId } });
     if (aUser) {
       res.send({
         code: 200,
