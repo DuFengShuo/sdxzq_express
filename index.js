@@ -281,7 +281,6 @@ app.post("/api/superManagerLogin", async (req, res) => {
 app.post("/api/searchUser", async (req, res) => {
   let username = req.query.account;
   let userPwd = req.query.pwd;
-
   const superUser = await User.findOne({ where: { account: username, password: userPwd } });
   if (superUser === null) {
     console.log('Not found!');
