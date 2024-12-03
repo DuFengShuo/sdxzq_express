@@ -8,7 +8,6 @@ const request = require("request");
 // const random = require('random-js');
 
 
-
 //md5加密
 const crypto = require('crypto');
 
@@ -298,7 +297,7 @@ app.post("/api/searchUser", async (req, res) => {
     if (aUser) {
       res.send({
         code: 200,
-        data: { "userId": aUser.id, "userType": aUser.user_type, "endDate": aUser.endDate },
+        data: aUser,
       });
     } else {
       res.send({
@@ -339,7 +338,6 @@ app.post("/api/getUserList", async (req, res) => {
     }
 
   }
-
 
 });
 
